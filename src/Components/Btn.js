@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import Modal from './Modal';
 
+const _ = require('lodash');
+
 const Btn = (props) => {
   const [modal, setModal] = useState(false);
   const [name, setName] = useState('');
+  const [error, setError] = useState('');
 
   const toggle = (e) => {
     e.preventDefault();
@@ -12,14 +15,20 @@ const Btn = (props) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (name === '') {
+      setError('Please enter a name');
+      return;
+    }
     const { func } = props;
+    setError('');
     toggle(e);
     func(name);
     setName('');
   }
 
   const handleChange = (e) => {
-    setName(e.target.value);
+    const value = _.trim(e.target.value);
+    setName(value);
   }
     return (
       <div>
@@ -27,9 +36,10 @@ const Btn = (props) => {
         <Modal isOpen={modal}>
           <Modal.Header toggle={toggle}>Add new person</Modal.Header>
           <Modal.Body>
-            <div className="form-group">
-                <label htmlFor="recipient-name" className="col-form-label">
-                  Name:
+          <form className="needs-validation" noValidate>
+            <div className="form-row">
+              <div className="col">
+                <label htmlFor="recipient-name">Name</label>
                   <input
                     type="text"
                     name="name"
@@ -37,9 +47,12 @@ const Btn = (props) => {
                     id="recipient-name"
                     value={name || ''}
                     onChange={handleChange}
+                    required
                   />
-                </label>
+                {<div>{error}</div>}
               </div>
+            </div>
+          </form>
           </Modal.Body>
           <Modal.Footer>
             <button type="button" className="btn btn-secondary" data-dismiss="modal" onClick={toggle}>Close</button>

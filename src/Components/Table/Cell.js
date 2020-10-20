@@ -1,5 +1,7 @@
 import React, { createRef } from 'react';
 
+const _ = require('lodash');
+
 class Cell extends React.Component {
   constructor(props) {
     super(props);
@@ -7,6 +9,7 @@ class Cell extends React.Component {
     this.state = {
       editing: false,
       value: this.props.value,
+      error: '',
     };
   }
 
@@ -18,18 +21,25 @@ class Cell extends React.Component {
     this.setState({ editing: false });
   }
 
-  handleSubmit = () => {
+  handleSubmit = (e) => {
+    e.preventDefault();
     const { value } = this.state;
+    if(value === '') {
+      this.setState({ error: 'Invalid format: HH:MM'});
+      return;
+    }
+    this.setState({ error: ''});
     const { name, day, week } = this.props;
     this.props.onSubmit(name, week, [day, value]);
   }
 
   handleChange = (e) => {
-    this.setState({ value: e.target.value });
+    const value = _.trim(e.target.value);
+    this.setState({ value: value });
   }
 
   render() {
-    const { editing } = this.state;
+    const { editing, error } = this.state;
     const { value } = this.props;
     return editing ? (
       <td>
@@ -46,6 +56,7 @@ class Cell extends React.Component {
               onBlur={() => this.onBlur()}
               onSubmit={this.handleSubmit}
             />
+            <div>{error}</div>
           </form>
         </div>
       </td>

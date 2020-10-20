@@ -1,5 +1,5 @@
 import React from 'react';
-import Cell from './Components/Cell';
+import Cell from './Cell';
 
 const _ = require('lodash');
 
@@ -16,7 +16,8 @@ const calculateWorkingTime = (data) => {
     const keysOfDays = Object.keys(week);
     const callculateHoursOfWeek = keysOfDays.reduce((accTime, keyDay) => {
       const time = week[keyDay];
-      if (time === '') return accTime;
+      if (time === '' || !time) return accTime;
+      console.log(time)
       const [start, end] = time.split('-');
       const [startHour, startMinutes] = start.split(':');
       const [endHour, endMinutes] = end.split(':');
@@ -34,14 +35,9 @@ const calculateWorkingTime = (data) => {
   return result;
 }
 
-class Body extends React.Component {
-  createCells = (name, data) => {
-
-  }
-
-  render() {
-    if (!this.props.week) {
-      const { data } = this.props;
+const Body = (props) => {
+    if (!props.week) {
+      const { data } = props;
       const table = data.map(({ name, jobtime }, index) => {
         const hours = calculateWorkingTime(jobtime);
         const procentageOfHours = (hours * 100) / 160;
@@ -54,7 +50,7 @@ class Body extends React.Component {
       });
       return (<tbody>{table}</tbody>)
     }
-    const { week, data, updateSchema } = this.props;
+    const { week, data, updateSchema } = props;
 
     const table = data.map(({ name, jobtime }, index) => {
       const objOfWeekTimes = jobtime[week];
@@ -78,8 +74,8 @@ class Body extends React.Component {
       );
     });
     return (
-      <tbody>{table}</tbody>);
-  }
+      <tbody>{table}</tbody>
+    );
 }
 
 export default Body;

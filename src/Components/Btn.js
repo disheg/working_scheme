@@ -1,42 +1,31 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Modal from './Modal';
 
-class Btn extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      modal: false,
-    };
+const Btn = (props) => {
+  const [modal, setModal] = useState(false);
+  const [name, setName] = useState('');
+
+  const toggle = (e) => {
+    e.preventDefault();
+    setModal(!modal);
   }
 
-  toggle = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    const { modal } = this.state;
-    this.setState({
-      modal: !modal,
-    });
-  }
-
-  handleSubmit = (e) => {
-    e.preventDefault();
-    const { func } = this.props;
-    const { name } = this.state;
-    this.toggle(e);
+    const { func } = props;
+    toggle(e);
     func(name);
-    this.setState({ name: '' });
+    setName('');
   }
 
-  handleChange = (e) => {
-    this.setState({ name: e.target.value });
+  const handleChange = (e) => {
+    setName(e.target.value);
   }
-
-  render() {
-    const { name, modal } = this.state;
     return (
       <div>
-        <button type="button" className="modal-open-button btn btn-danger" onClick={this.toggle}>Open</button>
+        <button type="button" className="modal-open-button btn btn-danger" onClick={toggle}>Open</button>
         <Modal isOpen={modal}>
-          <Modal.Header toggle={this.toggle}>Add new person</Modal.Header>
+          <Modal.Header toggle={toggle}>Add new person</Modal.Header>
           <Modal.Body>
             <div className="form-group">
                 <label htmlFor="recipient-name" className="col-form-label">
@@ -47,19 +36,18 @@ class Btn extends React.Component {
                     className="form-control"
                     id="recipient-name"
                     value={name || ''}
-                    onChange={this.handleChange}
+                    onChange={handleChange}
                   />
                 </label>
               </div>
           </Modal.Body>
           <Modal.Footer>
-            <button type="button" className="btn btn-secondary" data-dismiss="modal" onClick={this.toggle}>Close</button>
-            <button type="submit" className="btn btn-primary" onClick={this.handleSubmit}>Send message</button>
+            <button type="button" className="btn btn-secondary" data-dismiss="modal" onClick={toggle}>Close</button>
+            <button type="submit" className="btn btn-primary" onClick={handleSubmit}>Send message</button>
           </Modal.Footer>
         </Modal>
       </div>
     );
-  }
 }
 
 export default Btn;

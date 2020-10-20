@@ -1,8 +1,8 @@
 import React from 'react';
 import update from 'immutability-helper';
-import Table from './Table';
-import THead from './Thead';
-import TBody from './TBody';
+import Table from './Components/Table/Table';
+import THead from './Components/Table/Thead';
+import TBody from './Components/Table/TBody';
 import Btn from './Components/Btn';
 import personal from './Data/Data';
 
@@ -21,7 +21,7 @@ class App extends React.Component {
       name: workerName,
       jobtime: {
         week1: {
-          monday: '0',
+          monday: '',
           tuesday: '',
           wednesday: '',
           thursday: '',

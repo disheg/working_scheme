@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Cell from './Cell';
 
 const _ = require('lodash');
@@ -36,6 +36,10 @@ const calculateWorkingTime = (data) => {
 }
 
 const Body = (props) => {
+  useEffect(() => {
+    console.log(props.navigation)
+    document.title = props.week || props.navigation;
+  })
     if (!props.week) {
       const { data } = props;
       const table = data.map(({ name, jobtime }, index) => {

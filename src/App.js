@@ -103,7 +103,7 @@ class App extends React.Component {
       return (
         <Table>
           <THead data={arrayOfTh} />
-          <TBody data={data} />
+          <TBody data={data} navigation={navigation} />
         </Table>
       )
     }

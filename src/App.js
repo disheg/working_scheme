@@ -98,20 +98,17 @@ class App extends React.Component {
 
   renderTable = () => {
     const { data, navigation } = this.state;
-    if (navigation === 'total') {
-      const arrayOfTh = ['Name', 'Hours', 'Working time percentage'];
-      return (
-        <Table>
-          <THead data={arrayOfTh} />
-          <TBody data={data} navigation={navigation} />
-        </Table>
-      )
-    }
-    const arrayOfTh = ['Name', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    const headers = {
+      weeks: ['Name', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+      total: ['Name', 'Hours', 'Working time percentage'],
+    };
+    const headName = navigation === 'total' ? 'total' : 'weeks';
     return (
       <Table>
-        <THead data={arrayOfTh} />
-        <TBody data={data} updateSchema={this.updateSchema} week={navigation} />
+        <THead headers={headers[headName]} />
+        {navigation === 'total'
+          ? <TBody personalArray={data} navigation={navigation} />
+          : <TBody personalArray={data} updateSchema={this.updateSchema} navigation={navigation} />}
       </Table>
     );
   }

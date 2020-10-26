@@ -1,12 +1,13 @@
 import React, { useEffect } from 'react';
+import PropTypes from 'prop-types';
 import Cell from './Cell';
 
 const _ = require('lodash');
 
 const msToTime = (duration) => {
-  let hours = duration / (1000 * 60 * 60);
+  const hours = duration / (1000 * 60 * 60);
 
-  return hours ;
+  return hours;
 };
 
 const calculateWorkingTime = (data) => {
@@ -17,7 +18,6 @@ const calculateWorkingTime = (data) => {
     const callculateHoursOfWeek = keysOfDays.reduce((accTime, keyDay) => {
       const time = week[keyDay];
       if (time === '' || !time) return accTime;
-      console.log(time)
       const [start, end] = time.split('-');
       const [startHour, startMinutes] = start.split(':');
       const [endHour, endMinutes] = end.split(':');
@@ -33,53 +33,63 @@ const calculateWorkingTime = (data) => {
     return acc + callculateHoursOfWeek;
   }, 0);
   return result;
-}
+};
 
 const Body = (props) => {
+  const { personalArray, navigation, updateSchema } = props;
   useEffect(() => {
-    console.log(props.navigation)
-    document.title = props.week || props.navigation;
-  })
-    if (!props.week) {
-      const { data } = props;
-      const table = data.map(({ name, jobtime }, index) => {
-        const hours = calculateWorkingTime(jobtime);
-        const procentageOfHours = (hours * 100) / 160;
-        return (<tr key={_.uniqueId(name, index)}>
-          <td>{name}</td>
-          <td>{hours}</td>
-          <td>{procentageOfHours}%</td>
-
-        </tr>)
-      });
-      return (<tbody>{table}</tbody>)
-    }
-    const { week, data, updateSchema } = props;
-
-    const table = data.map(({ name, jobtime }, index) => {
-      const objOfWeekTimes = jobtime[week];
-      const keys = Object.keys(objOfWeekTimes);
-      const nameCell = <td key={_.uniqueId(name, index)}>{name}</td>;
-      const cells = keys.map((day) => (
-        <Cell
-          name={name}
-          day={day}
-          key={_.uniqueId(day)}
-          value={objOfWeekTimes[day]}
-          onSubmit={updateSchema}
-          week={week}
-        />
-      ));
-      const cellsData = [nameCell, ...cells];
+    document.title = props.navigation;
+  }, []);
+  if (navigation === 'total') {
+    const table = personalArray.map(({ name, jobtime }, index) => {
+      const hours = calculateWorkingTime(jobtime);
+      const procentageOfHours = (hours * 100) / 160;
       return (
         <tr key={_.uniqueId(name, index)}>
-          {cellsData}
+          <td>{name}</td>
+          <td>{hours}</td>
+          <td>
+            {procentageOfHours}
+            %
+          </td>
+
         </tr>
       );
     });
+    return (<tbody>{table}</tbody>);
+  }
+
+  const table = personalArray.map(({ name, jobtime }, index) => {
+    const objOfWeekTimes = jobtime[navigation];
+    const keys = Object.keys(objOfWeekTimes);
+    const nameCell = <td key={_.uniqueId(name, index)}>{name}</td>;
+    const cells = keys.map((day) => (
+      <Cell
+        name={name}
+        day={day}
+        key={_.uniqueId(day)}
+        value={objOfWeekTimes[day]}
+        onSubmit={updateSchema}
+        week={navigation}
+      />
+    ));
+    const cellsData = [nameCell, ...cells];
     return (
-      <tbody>{table}</tbody>
+      <tr key={_.uniqueId(name, index)}>
+        {cellsData}
+      </tr>
     );
-}
+  });
+  return (
+    <tbody>{table}</tbody>
+  );
+};
+
+Body.propTypes = {
+  personalArray: PropTypes.arrayOf(PropTypes.string).isRequired,
+  navigation: PropTypes.string.isRequired,
+  // eslint-disable-next-line react/require-default-props
+  updateSchema: PropTypes.func,
+};
 
 export default Body;

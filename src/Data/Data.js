@@ -80,7 +80,7 @@ const personal = [
         sunday: '7:00-16:00',
       },
     },
-  }
+  },
 ];
 
 export default personal;

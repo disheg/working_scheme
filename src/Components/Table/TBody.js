@@ -38,8 +38,8 @@ const calculateWorkingTime = (data) => {
 const Body = (props) => {
   const { personalArray, navigation, updateSchema } = props;
   useEffect(() => {
-    document.title = props.navigation;
-  }, []);
+    document.title = navigation;
+  }, [navigation]);
   if (navigation === 'total') {
     const table = personalArray.map(({ name, jobtime }, index) => {
       const hours = calculateWorkingTime(jobtime);
@@ -86,7 +86,7 @@ const Body = (props) => {
 };
 
 Body.propTypes = {
-  personalArray: PropTypes.arrayOf(PropTypes.string).isRequired,
+  personalArray: PropTypes.arrayOf(PropTypes.object).isRequired,
   navigation: PropTypes.string.isRequired,
   // eslint-disable-next-line react/require-default-props
   updateSchema: PropTypes.func,
